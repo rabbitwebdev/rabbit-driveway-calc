@@ -2,7 +2,7 @@
    /*
    Plugin Name: Driveway Cost Calculator
    Description: A custom plugin to manage driveway pricing and calculations.
-   Version: 1.0
+   Version: 2.0
    Author: Your Name
    */
 
@@ -63,3 +63,67 @@
 
        return new WP_REST_Response(array('total_cost' => $total_cost), 200);
    }
+
+   function driveway_calculator_form() {
+    ob_start();
+    ?>
+    <form id="driveway-calculator-form">
+        <label for="surface">Surface Type</label>
+        <select id="surface" name="surface">
+            <option value="asphalt">Asphalt</option>
+            <option value="concrete">Concrete</option>
+            <option value="gravel">Gravel</option>
+            <option value="blockpaving">Block Paving</option>
+        </select>
+        
+        <div id="blockpaving-design" style="display: none;">
+            <label for="design">Block Paving Design</label>
+            <select id="design" name="design">
+                <option value="herringbone">Herringbone</option>
+                <option value="basketweave">Basketweave</option>
+            </select>
+        </div>
+
+        <label for="area">Driveway Size (sq ft)</label>
+        <input type="number" id="area" name="area">
+
+        <button type="button" id="calculate-button">Calculate Cost</button>
+
+        <div id="cost-display"></div>
+    </form>
+
+    <script>
+    document.getElementById('surface').addEventListener('change', function() {
+        if (this.value === 'blockpaving') {
+            document.getElementById('blockpaving-design').style.display = 'block';
+        } else {
+            document.getElementById('blockpaving-design').style.display = 'none';
+        }
+    });
+
+    document.getElementById('calculate-button').addEventListener('click', function() {
+        const surface = document.getElementById('surface').value;
+        const area = document.getElementById('area').value;
+        const design = document.getElementById('design').value;
+
+        fetch('/wp-json/driveway-calculator/v1/calculate-cost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                surface_type: surface,
+                area: area,
+                design: design
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('cost-display').innerHTML = 'Total Cost: $' + data.total_cost;
+        });
+    });
+    </script>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode('driveway_calculator', 'driveway_calculator_form');
