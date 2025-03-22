@@ -2,7 +2,7 @@
    /*
    Plugin Name: Driveway Cost Calculator
    Description: A custom plugin to manage driveway pricing and calculations.
-   Version: 2.0
+   Version: 3.0
    Author: Your Name
    */
 
@@ -24,21 +24,53 @@
        echo '<h1>Driveway Cost Settings</h1>';
        // Add input fields for prices here
 
-         if ($_POST['submit']) {
-        update_option('driveway_asphalt_material_cost', $_POST['asphalt_material_cost']);
-        update_option('driveway_asphalt_labor_cost', $_POST['asphalt_labor_cost']);
-        // Add more options for other surfaces
-    }
+     if ($_POST['submit']) {
+           update_option('driveway_asphalt_material_cost', $_POST['asphalt_material_cost']);
+           update_option('driveway_asphalt_labor_cost', $_POST['asphalt_labor_cost']);
+           update_option('driveway_concrete_material_cost', $_POST['concrete_material_cost']);
+           update_option('driveway_concrete_labor_cost', $_POST['concrete_labor_cost']);
+           update_option('driveway_gravel_material_cost', $_POST['gravel_material_cost']);
+           update_option('driveway_gravel_labor_cost', $_POST['gravel_labor_cost']);
+           update_option('driveway_blockpaving_material_cost', $_POST['blockpaving_material_cost']);
+           update_option('driveway_blockpaving_labor_cost', $_POST['blockpaving_labor_cost']);
+           update_option('blockpaving_herringbone_design_cost', $_POST['herringbone_design_cost']);
+           update_option('blockpaving_basketweave_design_cost', $_POST['basketweave_design_cost']);
+       }
 
-    echo '<form method="POST">';
-    echo '<h2>Asphalt Pricing</h2>';
-    echo '<label>Material Cost per sq ft</label>';
-    echo '<input type="number" name="asphalt_material_cost" value="' . get_option('driveway_asphalt_material_cost') . '"/>';
-    echo '<br/><label>Labor Cost per sq ft</label>';
-    echo '<input type="number" name="asphalt_labor_cost" value="' . get_option('driveway_asphalt_labor_cost') . '"/>';
-    // Add more fields for other surfaces
-    echo '<br/><input type="submit" name="submit" value="Save Prices">';
-    echo '</form>';
+       echo '<form method="POST">';
+       
+       echo '<h2>Asphalt Pricing</h2>';
+       echo '<label>Material Cost per sqm</label>';
+       echo '<input type="number" name="asphalt_material_cost" value="' . get_option('driveway_asphalt_material_cost') . '"/>';
+       echo '<br/><label>Labor Cost per sqm</label>';
+       echo '<input type="number" name="asphalt_labor_cost" value="' . get_option('driveway_asphalt_labor_cost') . '"/>';
+
+       echo '<h2>Concrete Pricing</h2>';
+       echo '<label>Material Cost per sqm</label>';
+       echo '<input type="number" name="concrete_material_cost" value="' . get_option('driveway_concrete_material_cost') . '"/>';
+       echo '<br/><label>Labor Cost per sqm</label>';
+       echo '<input type="number" name="concrete_labor_cost" value="' . get_option('driveway_concrete_labor_cost') . '"/>';
+
+       echo '<h2>Gravel Pricing</h2>';
+       echo '<label>Material Cost per sqm</label>';
+       echo '<input type="number" name="gravel_material_cost" value="' . get_option('driveway_gravel_material_cost') . '"/>';
+       echo '<br/><label>Labor Cost per sqm</label>';
+       echo '<input type="number" name="gravel_labor_cost" value="' . get_option('driveway_gravel_labor_cost') . '"/>';
+
+       echo '<h2>Block Paving Pricing</h2>';
+       echo '<label>Material Cost per sqm</label>';
+       echo '<input type="number" name="blockpaving_material_cost" value="' . get_option('driveway_blockpaving_material_cost') . '"/>';
+       echo '<br/><label>Labor Cost per sqm</label>';
+       echo '<input type="number" name="blockpaving_labor_cost" value="' . get_option('driveway_blockpaving_labor_cost') . '"/>';
+
+       echo '<h2>Block Paving Designs</h2>';
+       echo '<label>Herringbone Design Cost per sqm</label>';
+       echo '<input type="number" name="herringbone_design_cost" value="' . get_option('blockpaving_herringbone_design_cost') . '"/>';
+       echo '<br/><label>Basketweave Design Cost per sqm</label>';
+       echo '<input type="number" name="basketweave_design_cost" value="' . get_option('blockpaving_basketweave_design_cost') . '"/>';
+
+       echo '<br/><input type="submit" name="submit" value="Save Prices">';
+       echo '</form>';
    }
 
    // Register API endpoint for dynamic pricing
@@ -51,17 +83,24 @@
 
    function calculate_driveway_cost($data) {
        // Fetch the user input (e.g., surface type, size, etc.)
-       $surface_type = $data['surface_type'];
-       $area = $data['area'];
+    $surface_type = $data['surface_type'];
+    $area = $data['area'];
+    $design = isset($data['design']) ? $data['design'] : null;
 
-       // Fetch dynamic prices from WordPress options
-       $material_cost = get_option('driveway_' . $surface_type . '_material_cost');
-       $labor_cost = get_option('driveway_' . $surface_type . '_labor_cost');
+    // Fetch dynamic material and labor costs based on surface type
+    $material_cost = get_option('driveway_' . $surface_type . '_material_cost');
+    $labor_cost = get_option('driveway_' . $surface_type . '_labor_cost');
 
-       // Calculate the total cost
-       $total_cost = ($material_cost * $area) + ($labor_cost * $area);
+    // Base cost
+    $total_cost = ($material_cost * $area) + ($labor_cost * $area);
 
-       return new WP_REST_Response(array('total_cost' => $total_cost), 200);
+    // For block paving, add additional design cost if applicable
+    if ($surface_type === 'blockpaving' && $design) {
+        $design_cost = get_option('blockpaving_' . $design . '_design_cost');
+        $total_cost += ($design_cost * $area);
+    }
+
+    return new WP_REST_Response(array('total_cost' => $total_cost), 200);
    }
 
    function driveway_calculator_form() {
@@ -119,7 +158,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('cost-display').innerHTML = 'Total Cost: $' + data.total_cost;
+            document.getElementById('cost-display').innerHTML = 'Total Cost: £' + data.total_cost;
         });
     });
     </script>
