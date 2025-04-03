@@ -1,0 +1,31 @@
+#driveway-calculator-form {
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+#driveway-calculator-form label {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#driveway-calculator-form select {
+width: 100%;
+}
+
+#calculate-button {
+    width: 100%;
+    margin:
+        20px 0;
+    background-color: transparent;
+    color: white;
+    padding:
+        10px;
+    text-transform: uppercase;
+    font-size: 18px;
+    letter-spacing: 2px;
+    font-weight: 500;
+}
