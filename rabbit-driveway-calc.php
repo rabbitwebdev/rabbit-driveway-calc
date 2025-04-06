@@ -128,7 +128,12 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     <button type="button" class="next">Next</button>
   </div>
 
- 
+  <div class="step step-2" style="display: none;">
+    <h3>Step 2: Enter Driveway Area (sqm)</h3>
+    <input type="number" id="areaInput" required min="1" placeholder="e.g. 50" />
+    <button type="button" class="prev">Previous</button>
+    <button type="button" class="next">Next</button>
+  </div>
 
   <div class="step step-3" style="display: none;">
     <h3>Step 3: Choose Block Paving Design</h3>
@@ -141,12 +146,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     <button type="button" class="next">Next</button>
   </div>
 
-   <div class="step step-2" style="display: none;">
-    <h3>Step 2: Enter Driveway Area (sqm)</h3>
-    <input type="number" id="areaInput" required min="1" placeholder="e.g. 50" />
-    <button type="button" class="prev">Previous</button>
-    <button type="button" class="next">Next</button>
-  </div>
+  
 
   <div class="step step-4" style="display: none;">
     <h3>Step 4: Estimated Cost</h3>
@@ -160,60 +160,66 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     const steps = document.querySelectorAll(".step");
     let currentStep = 0;
 
+    const surfaceInput = document.getElementById("surfaceType");
+    const areaInput = document.getElementById("areaInput");
+    const designInput = document.getElementById("design");
+    const costOutput = document.getElementById("costOutput");
+
     const showStep = (index) => {
       steps.forEach((step, i) => step.style.display = i === index ? "block" : "none");
     };
 
-    const nextBtns = document.querySelectorAll(".next");
-    const prevBtns = document.querySelectorAll(".prev");
+    const goToNext = () => {
+      if (currentStep === 0 && !surfaceInput.value) {
+        alert("Please select a surface type.");
+        return;
+      }
 
-    nextBtns.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        if (currentStep === 0 && !document.getElementById("surfaceType").value) return alert("Please select a surface type.");
-        if (currentStep === 1 && !document.getElementById("areaInput").value) return alert("Please enter the area.");
+      if (currentStep === 1 && !areaInput.value) {
+        alert("Please enter the area.");
+        return;
+      }
 
-        if (currentStep === 0 && document.getElementById("surfaceType").value === "blockpaving") {
-          currentStep++;
-        } else if (currentStep === 2 && document.getElementById("surfaceType").value !== "blockpaving") {
-          currentStep++;
-        }
-
+      // Step 2 logic: skip Step 3 if surface is not blockpaving
+      if (currentStep === 1 && surfaceInput.value !== "blockpaving") {
+        currentStep += 2;
+      } else {
         currentStep++;
+      }
 
-        // Show/hide step 3 based on surface type
-        if (document.getElementById("surfaceType").value !== "blockpaving" && currentStep === 2) {
-          currentStep++;
-        }
+      // If on last step, trigger calculation
+      if (currentStep === 3) {
+        fetchCost();
+      }
 
-        if (currentStep === 3) {
-          fetchCost();
-        }
+      showStep(currentStep);
+    };
 
-        showStep(currentStep);
-      });
-    });
-
-    prevBtns.forEach((btn) => {
-      btn.addEventListener("click", () => {
+    const goToPrev = () => {
+      if (currentStep === 3 && surfaceInput.value !== "blockpaving") {
+        currentStep -= 2;
+      } else {
         currentStep--;
-        if (currentStep === 2 && document.getElementById("surfaceType").value !== "blockpaving") {
-          currentStep--;
-        }
-        showStep(currentStep);
-      });
-    });
+      }
+      showStep(currentStep);
+    };
+
+    // Attach events
+    document.querySelectorAll(".next").forEach(btn => btn.addEventListener("click", goToNext));
+    document.querySelectorAll(".prev").forEach(btn => btn.addEventListener("click", goToPrev));
 
     const fetchCost = () => {
-      const surfaceType = document.getElementById("surfaceType").value;
-      const area = parseFloat(document.getElementById("areaInput").value);
-      const design = document.getElementById("design").value;
+      const surfaceType = surfaceInput.value;
+      const area = parseFloat(areaInput.value);
+      const design = designInput.value;
 
       const payload = {
         surface_type: surfaceType,
         area: area,
-        design: design,
+        ...(surfaceType === "blockpaving" && design ? { design } : {})
       };
 
+      costOutput.innerText = "Calculating...";
 
       fetch("/wp-json/driveway-calculator/v1/calculate-cost", {
         method: "POST",
@@ -224,17 +230,22 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
       })
         .then((res) => res.json())
         .then((data) => {
-          document.getElementById("costOutput").innerText = `Estimated Total Cost: £${data.total_cost.toFixed(2)}`;
+          if (data.total_cost) {
+            costOutput.innerText = `Estimated Total Cost: £${data.total_cost.toFixed(2)}`;
+          } else {
+            costOutput.innerText = "Error: Couldn't calculate cost.";
+          }
         })
         .catch((err) => {
           console.error("Cost calculation error:", err);
-          document.getElementById("costOutput").innerText = "Sorry, something went wrong.";
+          costOutput.innerText = "Sorry, something went wrong.";
         });
     };
 
     showStep(currentStep);
   });
 </script>
+
 
 <style>
   form#drivewayCalculatorForm {
