@@ -2,7 +2,7 @@
    /*
    Plugin Name: Driveway Cost Calculator
    Description: A custom plugin to manage driveway pricing and calculations.
-   Version: 5.5
+   Version: 6.5
    Author: Your Name
    */
 define('WPDC_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -146,13 +146,20 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     <button type="button" class="next">Next</button>
   </div>
 
-  
-
   <div class="step step-4" style="display: none;">
-    <h3>Step 4: Estimated Cost</h3>
-    <div id="costOutput">Calculating...</div>
-    <button type="button" class="prev">Previous</button>
-  </div>
+  <h3>Step 4: Enter Your Email (optional)</h3>
+  <input type="email" id="emailInput" placeholder="you@example.com" />
+  <button type="button" class="prev">Previous</button>
+  <button type="button" class="next">Next</button>
+</div>
+
+<div class="step step-5" style="display: none;">
+  <h3>Step 5: Estimated Cost</h3>
+  <div id="costOutput">Calculating...</div>
+  <button type="button" class="prev">Previous</button>
+</div>
+
+  
 </form>
 
 <script>
@@ -163,6 +170,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     const surfaceInput = document.getElementById("surfaceType");
     const areaInput = document.getElementById("areaInput");
     const designInput = document.getElementById("design");
+       const emailInput = document.getElementById("emailInput");
     const costOutput = document.getElementById("costOutput");
 
     const showStep = (index) => {
@@ -188,7 +196,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
       }
 
       // If on last step, trigger calculation
-      if (currentStep === 3) {
+      if (currentStep === 4) {
         fetchCost();
       }
 
@@ -196,7 +204,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     };
 
     const goToPrev = () => {
-      if (currentStep === 3 && surfaceInput.value !== "blockpaving") {
+      if (currentStep === 4 && surfaceInput.value !== "blockpaving") {
         currentStep -= 2;
       } else {
         currentStep--;
@@ -212,11 +220,13 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
       const surfaceType = surfaceInput.value;
       const area = parseFloat(areaInput.value);
       const design = designInput.value;
+       const email = emailInput.value;
 
       const payload = {
         surface_type: surfaceType,
         area: area,
-        ...(surfaceType === "blockpaving" && design ? { design } : {})
+        ...(surfaceType === "blockpaving" && design ? { design } : {}),
+        ...(email ? { email } : {})
       };
 
       costOutput.innerText = "Calculating...";
