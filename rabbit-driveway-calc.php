@@ -2,7 +2,7 @@
    /*
    Plugin Name: Driveway Cost Calculator
    Description: A custom plugin to manage driveway pricing and calculations.
-   Version: 6.5
+   Version: 7.5
    Author: Your Name
    */
 define('WPDC_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -150,6 +150,13 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
   <h3>Step 4: Enter Your Email (optional)</h3>
   <input type="email" id="emailInput" placeholder="you@example.com" />
   <button type="button" class="prev">Previous</button>
+  <button type="submit">Submit</button>
+</div>
+
+  <!-- <div class="step step-4" style="display: none;">
+  <h3>Step 4: Enter Your Email (optional)</h3>
+  <input type="email" id="emailInput" placeholder="you@example.com" />
+  <button type="button" class="prev">Previous</button>
   <button type="button" class="next">Next</button>
 </div>
 
@@ -157,54 +164,48 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
   <h3>Step 5: Estimated Cost</h3>
   <div id="costOutput">Calculating...</div>
   <button type="button" class="prev">Previous</button>
-</div>
+</div> -->
 
   
 </form>
-
-<script>
+<div id="confirmation" style="display:none; text-align: center;">
+  <h3>Thanks! Here's your Estimate:</h3>
+  <div id="costOutput"></div>
+</div>
+ <script>
   document.addEventListener("DOMContentLoaded", function () {
     const steps = document.querySelectorAll(".step");
+    const form = document.getElementById("drivewayCalculatorForm");
+    const confirmation = document.getElementById("confirmation");
+    const costOutput = document.getElementById("costOutput");
+
     let currentStep = 0;
 
     const surfaceInput = document.getElementById("surfaceType");
     const areaInput = document.getElementById("areaInput");
     const designInput = document.getElementById("design");
-       const emailInput = document.getElementById("emailInput");
-    const costOutput = document.getElementById("costOutput");
+    const emailInput = document.getElementById("emailInput");
 
     const showStep = (index) => {
       steps.forEach((step, i) => step.style.display = i === index ? "block" : "none");
     };
 
     const goToNext = () => {
-      if (currentStep === 0 && !surfaceInput.value) {
-        alert("Please select a surface type.");
-        return;
-      }
+      if (currentStep === 0 && !surfaceInput.value) return alert("Please select a surface type.");
+      if (currentStep === 1 && !areaInput.value) return alert("Please enter the area.");
 
-      if (currentStep === 1 && !areaInput.value) {
-        alert("Please enter the area.");
-        return;
-      }
-
-      // Step 2 logic: skip Step 3 if surface is not blockpaving
+      // Skip Step 3 (design) if not blockpaving
       if (currentStep === 1 && surfaceInput.value !== "blockpaving") {
         currentStep += 2;
       } else {
         currentStep++;
       }
 
-      // If on last step, trigger calculation
-      if (currentStep === 4) {
-        fetchCost();
-      }
-
       showStep(currentStep);
     };
 
     const goToPrev = () => {
-      if (currentStep === 4 && surfaceInput.value !== "blockpaving") {
+      if (currentStep === 3 && surfaceInput.value !== "blockpaving") {
         currentStep -= 2;
       } else {
         currentStep--;
@@ -212,49 +213,46 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
       showStep(currentStep);
     };
 
-    // Attach events
     document.querySelectorAll(".next").forEach(btn => btn.addEventListener("click", goToNext));
     document.querySelectorAll(".prev").forEach(btn => btn.addEventListener("click", goToPrev));
 
-    const fetchCost = () => {
-      const surfaceType = surfaceInput.value;
-      const area = parseFloat(areaInput.value);
-      const design = designInput.value;
-       const email = emailInput.value;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
 
       const payload = {
-        surface_type: surfaceType,
-        area: area,
-        ...(surfaceType === "blockpaving" && design ? { design } : {}),
-        ...(email ? { email } : {})
+        surface_type: surfaceInput.value,
+        area: parseFloat(areaInput.value),
+        ...(surfaceInput.value === "blockpaving" && designInput.value ? { design: designInput.value } : {}),
+        ...(emailInput.value ? { email: emailInput.value } : {})
       };
 
       costOutput.innerText = "Calculating...";
+      form.style.display = "none";
+      confirmation.style.display = "block";
 
       fetch("/wp-json/driveway-calculator/v1/calculate-cost", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       })
-        .then((res) => res.json())
-        .then((data) => {
+        .then(res => res.json())
+        .then(data => {
           if (data.total_cost) {
             costOutput.innerText = `Estimated Total Cost: £${data.total_cost.toFixed(2)}`;
           } else {
             costOutput.innerText = "Error: Couldn't calculate cost.";
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.error("Cost calculation error:", err);
           costOutput.innerText = "Sorry, something went wrong.";
         });
-    };
+    });
 
     showStep(currentStep);
   });
 </script>
+
 
 
 <style>
