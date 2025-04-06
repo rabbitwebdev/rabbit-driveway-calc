@@ -135,7 +135,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
         <label class="mb-3" for="area">Driveway Size (sq ft)</label>
         <input class="mb-3" type="number" id="area" name="area">
 
-        <button class="btn mb-3" type="button" id="calculate-button">Calculate Cost</button>
+        <button class=" btn btn-outline-light mb-3" type="button" id="calculate-button">Calculate Cost</button>
 
         <div id="cost-display"></div>
     </form>
