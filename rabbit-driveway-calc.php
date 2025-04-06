@@ -256,12 +256,18 @@ const name = document.getElementById("nameInput").value.trim();
       })
         .then(res => res.json())
         .then(data => {
-          if (data.total_cost) {
-            costOutput.innerText = `Estimated Total Cost: £${data.total_cost.toFixed(2)}`;
-          } else {
-            costOutput.innerText = "Error: Couldn't calculate cost.";
-          }
-        })
+  if (data.total_cost) {
+    const formatted = data.total_cost.toLocaleString("en-GB", {
+      style: "currency",
+      currency: "GBP",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    costOutput.innerText = `Estimated Total Cost: ${formatted}`;
+  } else {
+    costOutput.innerText = "Error: Couldn't calculate cost.";
+  }
+})
         .catch(err => {
           console.error("Cost calculation error:", err);
           costOutput.innerText = "Sorry, something went wrong.";
