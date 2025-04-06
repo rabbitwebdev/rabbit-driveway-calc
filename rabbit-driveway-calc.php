@@ -243,6 +243,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     font-family: sans-serif;
     background: #f8f8f8;
     padding: 20px;
+    color:#000;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
