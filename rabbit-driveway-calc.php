@@ -2,7 +2,7 @@
    /*
    Plugin Name: Driveway Cost Calculator
    Description: A custom plugin to manage driveway pricing and calculations.
-   Version: 4.0
+   Version: 5.5
    Author: Your Name
    */
 define('WPDC_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -212,9 +212,6 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
         design: design,
       };
 
-      if (surfaceType === "blockpaving" && design) {
-        payload.design = design;
-      }
 
       fetch("/wp-json/driveway-calculator/v1/calculate-cost", {
         method: "POST",
