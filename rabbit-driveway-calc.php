@@ -117,7 +117,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     ?>
     <form id="driveway-calculator-form">
         <label class="mb-3" for="surface">Surface Type</label>
-        <select id="surface" name="surface">
+        <select class="mb-3" id="surface" name="surface">
             <option value="asphalt">Asphalt</option>
             <option value="concrete">Concrete</option>
             <option value="gravel">Gravel</option>
@@ -125,17 +125,17 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
         </select>
         
         <div id="blockpaving-design" style="display: none;">
-            <label for="design">Block Paving Design</label>
-            <select id="design" name="design">
+            <label class="mb-3" for="design">Block Paving Design</label>
+            <select class="mb-3" id="design" name="design">
                 <option value="herringbone">Herringbone</option>
                 <option value="basketweave">Basketweave</option>
             </select>
         </div>
 
-        <label for="area">Driveway Size (sq ft)</label>
-        <input type="number" id="area" name="area">
+        <label class="mb-3" for="area">Driveway Size (sq ft)</label>
+        <input class="mb-3" type="number" id="area" name="area">
 
-        <button type="button" id="calculate-button">Calculate Cost</button>
+        <button class="btn mb-3" type="button" id="calculate-button">Calculate Cost</button>
 
         <div id="cost-display"></div>
     </form>
