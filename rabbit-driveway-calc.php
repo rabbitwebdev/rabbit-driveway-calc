@@ -137,7 +137,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
 
   <div class="step step-3" style="display: none;">
     <h3>Step 3: Choose Block Paving Design</h3>
-    <select id="designType">
+    <select id="design" name="design">
       <option value="">--Choose Design--</option>
       <option value="herringbone">Herringbone</option>
       <option value="basketweave">Basketweave</option>
@@ -204,11 +204,12 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     const fetchCost = () => {
       const surfaceType = document.getElementById("surfaceType").value;
       const area = parseFloat(document.getElementById("areaInput").value);
-      const design = document.getElementById("designType").value;
+      const design = document.getElementById("design").value;
 
       const payload = {
         surface_type: surfaceType,
         area: area,
+        design: design,
       };
 
       if (surfaceType === "blockpaving" && design) {
