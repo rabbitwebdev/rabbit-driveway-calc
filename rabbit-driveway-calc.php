@@ -95,6 +95,8 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     $surface_type = $data['surface_type'];
     $area = $data['area'];
     $design = isset($data['design']) ? $data['design'] : null;
+    $name = sanitize_text_field($data['name'] ?? '');
+
      $email = sanitize_email($data['email'] ?? '');
 
     // Fetch dynamic material and labor costs based on surface type
@@ -113,12 +115,13 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     // Optional: Email the quote
   if ($email && is_email($email)) {
     $subject = "Your Driveway Cost Estimate";
-    $message = "Hi,\n\nThank you for using our driveway calculator.\n\n".
+    $greeting = $name ? "Hi $name," : "Hi,";
+    $message = "$greeting\n\nThank you for using our driveway calculator.\n\n".
                "Surface: $surface_type\n".
                ($design ? "Design: $design\n" : "").
                "Area: $area m²\n".
                "Estimated Cost: £" . number_format($total_cost, 2) . "\n\n".
-               "Best regards,\nYour Company Name";
+               "Best regards,\nAndrew York Landscaping";
 
     wp_mail($email, $subject, $message);
   }
@@ -160,8 +163,9 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     <button type="button" class="next">Next</button>
   </div>
 
-  <div class="step step-4" style="display: none;">
-  <h3>Step 4: Enter Your Email (optional)</h3>
+ <div class="step step-4" style="display: none;">
+  <h3>Step 4: Contact Details</h3>
+  <input type="text" id="nameInput" placeholder="Your Name" />
   <input type="email" id="emailInput" placeholder="you@example.com" />
   <button type="button" class="prev">Previous</button>
   <button type="submit">Submit</button>
@@ -199,6 +203,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     const areaInput = document.getElementById("areaInput");
     const designInput = document.getElementById("design");
     const emailInput = document.getElementById("emailInput");
+    const name = document.getElementById("nameInput").value.trim();
 
     const showStep = (index) => {
       steps.forEach((step, i) => step.style.display = i === index ? "block" : "none");
@@ -237,6 +242,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
         surface_type: surfaceInput.value,
         area: parseFloat(areaInput.value),
         ...(surfaceInput.value === "blockpaving" && designInput.value ? { design: designInput.value } : {}),
+        ...(name ? { name: name } : {}),
         ...(emailInput.value ? { email: emailInput.value } : {})
       };
 
