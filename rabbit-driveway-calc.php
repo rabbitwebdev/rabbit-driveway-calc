@@ -115,7 +115,166 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
    function driveway_calculator_form() {
     ob_start();
     ?>
-    <form id="driveway-calculator-form">
+    <form id="drivewayCalculatorForm">
+  <div class="step step-1">
+    <h3>Step 1: Select Surface</h3>
+    <select id="surfaceType" required>
+      <option value="">--Choose Surface--</option>
+      <option value="asphalt">Asphalt</option>
+      <option value="concrete">Concrete</option>
+      <option value="gravel">Gravel</option>
+      <option value="blockpaving">Block Paving</option>
+    </select>
+    <button type="button" class="next">Next</button>
+  </div>
+
+  <div class="step step-2" style="display: none;">
+    <h3>Step 2: Enter Driveway Area (sqm)</h3>
+    <input type="number" id="areaInput" required min="1" placeholder="e.g. 50" />
+    <button type="button" class="prev">Previous</button>
+    <button type="button" class="next">Next</button>
+  </div>
+
+  <div class="step step-3" style="display: none;">
+    <h3>Step 3: Choose Block Paving Design</h3>
+    <select id="designType">
+      <option value="">--Choose Design--</option>
+      <option value="herringbone">Herringbone</option>
+      <option value="basketweave">Basketweave</option>
+    </select>
+    <button type="button" class="prev">Previous</button>
+    <button type="button" class="next">Next</button>
+  </div>
+
+  <div class="step step-4" style="display: none;">
+    <h3>Step 4: Estimated Cost</h3>
+    <div id="costOutput">Calculating...</div>
+    <button type="button" class="prev">Previous</button>
+  </div>
+</form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const steps = document.querySelectorAll(".step");
+    let currentStep = 0;
+
+    const showStep = (index) => {
+      steps.forEach((step, i) => step.style.display = i === index ? "block" : "none");
+    };
+
+    const nextBtns = document.querySelectorAll(".next");
+    const prevBtns = document.querySelectorAll(".prev");
+
+    nextBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (currentStep === 0 && !document.getElementById("surfaceType").value) return alert("Please select a surface type.");
+        if (currentStep === 1 && !document.getElementById("areaInput").value) return alert("Please enter the area.");
+
+        if (currentStep === 0 && document.getElementById("surfaceType").value === "blockpaving") {
+          currentStep++;
+        } else if (currentStep === 2 && document.getElementById("surfaceType").value !== "blockpaving") {
+          currentStep++;
+        }
+
+        currentStep++;
+
+        // Show/hide step 3 based on surface type
+        if (document.getElementById("surfaceType").value !== "blockpaving" && currentStep === 2) {
+          currentStep++;
+        }
+
+        if (currentStep === 3) {
+          fetchCost();
+        }
+
+        showStep(currentStep);
+      });
+    });
+
+    prevBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        currentStep--;
+        if (currentStep === 2 && document.getElementById("surfaceType").value !== "blockpaving") {
+          currentStep--;
+        }
+        showStep(currentStep);
+      });
+    });
+
+    const fetchCost = () => {
+      const surfaceType = document.getElementById("surfaceType").value;
+      const area = parseFloat(document.getElementById("areaInput").value);
+      const design = document.getElementById("designType").value;
+
+      const payload = {
+        surface_type: surfaceType,
+        area: area,
+      };
+
+      if (surfaceType === "blockpaving" && design) {
+        payload.design = design;
+      }
+
+      fetch("/wp-json/driveway-calculator/v1/calculate-cost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          document.getElementById("costOutput").innerText = `Estimated Total Cost: £${data.total_cost.toFixed(2)}`;
+        })
+        .catch((err) => {
+          console.error("Cost calculation error:", err);
+          document.getElementById("costOutput").innerText = "Sorry, something went wrong.";
+        });
+    };
+
+    showStep(currentStep);
+  });
+</script>
+
+<style>
+  form#drivewayCalculatorForm {
+    max-width: 500px;
+    margin: auto;
+    font-family: sans-serif;
+    background: #f8f8f8;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  form#drivewayCalculatorForm .step {
+    transition: all 0.3s ease-in-out;
+  }
+  form#drivewayCalculatorForm h3 {
+    margin-bottom: 10px;
+  }
+  form#drivewayCalculatorForm select,
+  form#drivewayCalculatorForm input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  form#drivewayCalculatorForm button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    background: #1d4ed8;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  form#drivewayCalculatorForm button:hover {
+    background: #2563eb;
+  }
+</style>
+
+    <!-- <form id="driveway-calculator-form">
         <label class="mb-3" for="surface">Surface Type</label>
         <select class="mb-3" id="surface" name="surface">
             <option value="asphalt">Asphalt</option>
@@ -170,7 +329,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
             document.getElementById('cost-display').innerHTML = 'Total Cost: £' + data.total_cost;
         });
     });
-    </script>
+    </script> -->
     <?php
     return ob_get_clean();
 }
