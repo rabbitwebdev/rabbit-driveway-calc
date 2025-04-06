@@ -128,12 +128,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     <button type="button" class="next">Next</button>
   </div>
 
-  <div class="step step-2" style="display: none;">
-    <h3>Step 2: Enter Driveway Area (sqm)</h3>
-    <input type="number" id="areaInput" required min="1" placeholder="e.g. 50" />
-    <button type="button" class="prev">Previous</button>
-    <button type="button" class="next">Next</button>
-  </div>
+ 
 
   <div class="step step-3" style="display: none;">
     <h3>Step 3: Choose Block Paving Design</h3>
@@ -142,6 +137,13 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
       <option value="herringbone">Herringbone</option>
       <option value="basketweave">Basketweave</option>
     </select>
+    <button type="button" class="prev">Previous</button>
+    <button type="button" class="next">Next</button>
+  </div>
+
+   <div class="step step-2" style="display: none;">
+    <h3>Step 2: Enter Driveway Area (sqm)</h3>
+    <input type="number" id="areaInput" required min="1" placeholder="e.g. 50" />
     <button type="button" class="prev">Previous</button>
     <button type="button" class="next">Next</button>
   </div>
