@@ -95,6 +95,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     $surface_type = $data['surface_type'];
     $area = $data['area'];
     $design = isset($data['design']) ? $data['design'] : null;
+     $email = sanitize_email($data['email'] ?? '');
 
     // Fetch dynamic material and labor costs based on surface type
     $material_cost = get_option('driveway_' . $surface_type . '_material_cost');
@@ -108,6 +109,19 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
         $design_cost = get_option('blockpaving_' . $design . '_design_cost');
         $total_cost += ($design_cost * $area);
     }
+
+    // Optional: Email the quote
+  if ($email && is_email($email)) {
+    $subject = "Your Driveway Cost Estimate";
+    $message = "Hi,\n\nThank you for using our driveway calculator.\n\n".
+               "Surface: $surface_type\n".
+               ($design ? "Design: $design\n" : "").
+               "Area: $area m²\n".
+               "Estimated Cost: £" . number_format($total_cost, 2) . "\n\n".
+               "Best regards,\nYour Company Name";
+
+    wp_mail($email, $subject, $message);
+  }
 
     return new WP_REST_Response(array('total_cost' => $total_cost), 200);
    }
