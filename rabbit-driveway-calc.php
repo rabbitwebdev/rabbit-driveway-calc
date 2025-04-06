@@ -203,7 +203,6 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     const areaInput = document.getElementById("areaInput");
     const designInput = document.getElementById("design");
     const emailInput = document.getElementById("emailInput");
-    const name = document.getElementById("nameInput").value.trim();
 
     const showStep = (index) => {
       steps.forEach((step, i) => step.style.display = i === index ? "block" : "none");
@@ -237,7 +236,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-
+const name = document.getElementById("nameInput").value.trim();
       const payload = {
         surface_type: surfaceInput.value,
         area: parseFloat(areaInput.value),
