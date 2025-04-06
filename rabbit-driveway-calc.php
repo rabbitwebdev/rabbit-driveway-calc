@@ -13,6 +13,8 @@ function wpdc_enqueue_assets() {
 
 add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
 
+
+
    // Register the settings page to manage prices
    function driveway_calculator_admin_menu() {
        add_menu_page(
@@ -114,7 +116,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
     ob_start();
     ?>
     <form id="driveway-calculator-form">
-        <label for="surface">Surface Type</label>
+        <label class="mb-3" for="surface">Surface Type</label>
         <select id="surface" name="surface">
             <option value="asphalt">Asphalt</option>
             <option value="concrete">Concrete</option>
