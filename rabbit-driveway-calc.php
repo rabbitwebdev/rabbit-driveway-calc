@@ -2,7 +2,7 @@
    /*
    Plugin Name: Driveway Cost Calculator
    Description: A custom plugin to manage driveway pricing and calculations.
-   Version: 7.5
+   Version: 7.5.1
    Author: Your Name
    */
 define('WPDC_PLUGIN_URL', plugin_dir_url(__FILE__));
