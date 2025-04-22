@@ -2,7 +2,7 @@
    /*
    Plugin Name: Driveway Cost Calculator
    Description: A custom plugin to manage driveway pricing and calculations.
-   Version: 8.0.0
+   Version: 8.1.0
    Author: Your Name
    */
 define('WPDC_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -280,7 +280,7 @@ const name = document.getElementById("nameInput").value.trim();
 
 
 
-<style>
+<!-- <style>
   form#drivewayCalculatorForm {
     max-width: 500px;
     margin: auto;
@@ -306,18 +306,23 @@ const name = document.getElementById("nameInput").value.trim();
     border-radius: 6px;
   }
   form#drivewayCalculatorForm button {
-    padding: 10px 20px;
-    margin-right: 10px;
-    background: #1d4ed8;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+   padding:10px 20px;
+  margin-right: 10px;
+  background:#1d4ed8;
+  color: #fff;
+  border:none;
+  border-radius:6px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 1px;
+  transition: background 0.3s;
   }
   form#drivewayCalculatorForm button:hover {
     background: #2563eb;
+    transition: background 0.3s;
   }
-</style>
+</style> -->
 
     <!-- <form id="driveway-calculator-form">
         <label class="mb-3" for="surface">Surface Type</label>
