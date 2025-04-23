@@ -2,9 +2,13 @@
    /*
    Plugin Name: Driveway Cost Calculator
    Description: A custom plugin to manage driveway pricing and calculations.
-   Version: 8.1.0
+   Version: 8.5.0
    Author: Your Name
    */
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
 define('WPDC_PLUGIN_URL', plugin_dir_url(__FILE__));
    // Register styles and scripts
 function wpdc_enqueue_assets() {
@@ -13,6 +17,11 @@ function wpdc_enqueue_assets() {
 
 add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
 
+add_action('admin_enqueue_scripts', function ($hook) {
+  if ($hook === 'driveway_calculator_settings_page') {
+    wp_enqueue_style('dc-admin-style', plugin_dir_url(__FILE__) . 'assets/css/admin-style.css');
+  }
+});
 
 
    // Register the settings page to manage prices
@@ -49,24 +58,28 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
 
        echo '<form method="POST">';
        
+       echo '<div class="dcs-form-group">';
        echo '<h2>Asphalt Pricing</h2>';
        echo '<label>Material Cost per sqm</label>';
        echo '<input type="number" name="asphalt_material_cost" value="' . get_option('driveway_asphalt_material_cost') . '"/>';
        echo '<br/><label>Labor Cost per sqm</label>';
        echo '<input type="number" name="asphalt_labor_cost" value="' . get_option('driveway_asphalt_labor_cost') . '"/>';
-
+        echo '</div>';
+        echo '<div class="dcs-form-group">';
        echo '<h2>Concrete Pricing</h2>';
        echo '<label>Material Cost per sqm</label>';
        echo '<input type="number" name="concrete_material_cost" value="' . get_option('driveway_concrete_material_cost') . '"/>';
        echo '<br/><label>Labor Cost per sqm</label>';
        echo '<input type="number" name="concrete_labor_cost" value="' . get_option('driveway_concrete_labor_cost') . '"/>';
-
+        echo '</div>';
+        echo '<div class="dcs-form-group">';
        echo '<h2>Gravel Pricing</h2>';
        echo '<label>Material Cost per sqm</label>';
        echo '<input type="number" name="gravel_material_cost" value="' . get_option('driveway_gravel_material_cost') . '"/>';
        echo '<br/><label>Labor Cost per sqm</label>';
        echo '<input type="number" name="gravel_labor_cost" value="' . get_option('driveway_gravel_labor_cost') . '"/>';
-
+        echo '</div>';
+        echo '<div class="dcs-form-group">';
        echo '<h2>Block Paving Pricing</h2>';
        echo '<label>Material Cost per sqm</label>';
        echo '<input type="number" name="blockpaving_material_cost" value="' . get_option('driveway_blockpaving_material_cost') . '"/>';
@@ -78,8 +91,8 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
        echo '<input type="number" name="herringbone_design_cost" value="' . get_option('blockpaving_herringbone_design_cost') . '"/>';
        echo '<br/><label>Basketweave Design Cost per sqm</label>';
        echo '<input type="number" name="basketweave_design_cost" value="' . get_option('blockpaving_basketweave_design_cost') . '"/>';
-
-       echo '<br/><input type="submit" name="submit" value="Save Prices">';
+        echo '</div>';
+       echo '<br/><input class="button" type="submit" name="submit" value="Save Prices">';
        echo '</form>';
         echo '</div>';
    }

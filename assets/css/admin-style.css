@@ -1,0 +1,22 @@
+.dcs-wrap {
+    padding:25px;
+}
+
+.dcs-wrap form h2 {
+    text-transform: capitalize;
+    color: black;
+    text-underline-offset: 2px;
+    text-decoration:underline;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.dcs-wrap form label {
+    width: 100% !important;
+    display: block;
+    margin-bottom: 5px;
+    margin-top: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: black;
+}
