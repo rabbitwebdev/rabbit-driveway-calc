@@ -24,12 +24,14 @@ form#drivewayCalculatorForm h3 {
 
 form#drivewayCalculatorForm select,
 form#drivewayCalculatorForm input {
-    width: 100%;
+    width: 95%;
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 6px;
 }
+
+
 
 #driveway-calculator-form label {
     margin-bottom: 10px;
