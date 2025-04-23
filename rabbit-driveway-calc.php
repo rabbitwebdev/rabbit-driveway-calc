@@ -22,6 +22,17 @@ function dc_admin_enqueue_styles() {
 }
 add_action('admin_enqueue_scripts', 'dc_admin_enqueue_styles');
 
+add_action('init', function () {
+  register_post_type('driveway_quote', [
+    'label' => 'Driveway Quotes',
+    'public' => false,
+    'show_ui' => true,
+    'supports' => ['title', 'editor'],
+    'menu_icon' => 'dashicons-email-alt',
+  ]);
+});
+
+
 
    // Register the settings page to manage prices
    function driveway_calculator_admin_menu() {
@@ -184,6 +195,23 @@ $email_message = str_replace(array_keys($replacements), array_values($replacemen
 
     // wp_mail($email, $subject, $message);
     // wp_mail($email, "Your Driveway Estimate", $email_message);
+
+     // Build content
+  $quote_title = "Quote from " . ($name ?: 'User') . " (" . date('Y-m-d H:i') . ")";
+  $quote_content = "Name: " . ($name ?: 'N/A') . "\n" .
+                   "Email: " . $email . "\n" .
+                   "Surface: " . ucfirst($surface_type) . "\n" .
+                   "Design: " . ($design ?: 'N/A') . "\n" .
+                   "Area: " . $area . " m²\n" .
+                   "Total Cost: £" . number_format($total_cost, 2);
+
+  // Create post
+  wp_insert_post([
+    'post_type' => 'driveway_quote',
+    'post_title' => $quote_title,
+    'post_content' => $quote_content,
+    'post_status' => 'publish',
+  ]);
 
     $from_email = get_option('driveway_from_email', get_option('admin_email'));
 $site_name = get_bloginfo('name');
