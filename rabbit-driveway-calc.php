@@ -501,3 +501,17 @@ function dcwp_register_acf_blocks() {
 }
 // Here we call our tt3child_register_acf_block() function on init.
 add_action( 'init', 'dcwp_register_acf_blocks' );
+
+add_action('add_meta_boxes', function () {
+  add_meta_box('quote_details_meta', 'Quote Details', 'render_quote_details_meta', 'driveway_quote', 'normal', 'high');
+});
+
+function render_quote_details_meta($post) {
+  $fields = ['name', 'email', 'surface', 'design', 'area', 'total_cost'];
+  echo '<table class="form-table">';
+  foreach ($fields as $field) {
+    $value = esc_html(get_post_meta($post->ID, $field, true));
+    echo "<tr><th>$field</th><td><input type='text' value='$value' readonly class='regular-text' /></td></tr>";
+  }
+  echo '</table>';
+}
