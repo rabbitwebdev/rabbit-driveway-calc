@@ -1,6 +1,6 @@
 {
     "name": "acf/driveway-calc",
-    "title": "Rabbit Text",
+    "title": "Driveway Calc",
     "description": "A custom driveway-calc block that uses ACF fields.",
     "style": [ "file:./driveway-calc.css" ],
     "category": "formatting",
