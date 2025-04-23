@@ -71,7 +71,7 @@ if (isset($_POST['submit'])) {
 }
 
 echo '<h2>Email Template</h2>';
-echo '<p>You can use the following placeholders: <code>{name}</code>, <code>{surface}</code>, <code>{design}</code>, <code>{area}</code>, <code>{cost}</code></p>';
+echo '<p>You can use the following placeholders: <code>{name}</code>, <code>{surface}</code>, <code>{design}</code>, <code>{area}</code>, <code>{cost}</code>, <code>{site_name}</code>, <code>{admin_email}</code> </p>';
 echo '<textarea name="email_template" rows="10" cols="80" style="width:100%;">' . esc_textarea($current_template) . '</textarea>';
 
        
@@ -153,6 +153,8 @@ $replacements = [
   '{design}' => $design ?: 'N/A',
   '{area}' => $area,
   '{cost}' => number_format($total_cost, 2),
+   '{site_name}' => get_bloginfo('name'),
+  '{admin_email}' => get_option('admin_email'),
 ];
 
 $email_message = str_replace(array_keys($replacements), array_values($replacements), $email_template);
