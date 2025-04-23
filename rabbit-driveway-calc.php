@@ -27,7 +27,7 @@ add_action('init', function () {
     'label' => 'Driveway Quotes',
     'public' => false,
     'show_ui' => true,
-    'supports' => ['title', 'editor'],
+    'supports' => ['title', 'editor', 'custom-fields'],
     'menu_icon' => 'dashicons-email-alt',
   ]);
 });
