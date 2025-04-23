@@ -17,11 +17,7 @@ function wpdc_enqueue_assets() {
 
 add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
 
-add_action('admin_enqueue_scripts', function ($hook) {
-  if ($hook === 'driveway_calculator_settings_page') {
-    wp_enqueue_style('dc-admin-style', plugin_dir_url(__FILE__) . 'assets/css/admin-style.css');
-  }
-});
+
 
 
    // Register the settings page to manage prices
@@ -96,6 +92,11 @@ add_action('admin_enqueue_scripts', function ($hook) {
        echo '</form>';
         echo '</div>';
    }
+   add_action('admin_enqueue_scripts', function ($hook) {
+  if ($hook === 'driveway_calculator_settings_page') {
+    wp_enqueue_style('dc-admin-style', plugin_dir_url(__FILE__) . 'assets/css/admin-style.css');
+  }
+});
 
    // Register API endpoint for dynamic pricing
    add_action('rest_api_init', function () {
