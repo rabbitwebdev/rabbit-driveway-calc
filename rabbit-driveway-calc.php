@@ -198,20 +198,25 @@ $email_message = str_replace(array_keys($replacements), array_values($replacemen
 
      // Build content
   $quote_title = "Quote from " . ($name ?: 'User') . " (" . date('Y-m-d H:i') . ")";
-  $quote_content = "Name: " . ($name ?: 'N/A') . "\n" .
-                   "Email: " . $email . "\n" .
-                   "Surface: " . ucfirst($surface_type) . "\n" .
-                   "Design: " . ($design ?: 'N/A') . "\n" .
-                   "Area: " . $area . " m²\n" .
-                   "Total Cost: £" . number_format($total_cost, 2);
+  $quote_content = "Driveway quote submitted via calculator.";
 
-  // Create post
-  wp_insert_post([
+  // Create the post
+  $post_id = wp_insert_post([
     'post_type' => 'driveway_quote',
     'post_title' => $quote_title,
     'post_content' => $quote_content,
     'post_status' => 'publish',
   ]);
+
+  // Structured post meta
+  if ($post_id && !is_wp_error($post_id)) {
+    update_post_meta($post_id, 'name', $name);
+    update_post_meta($post_id, 'email', $email);
+    update_post_meta($post_id, 'surface', $surface_type);
+    update_post_meta($post_id, 'design', $design);
+    update_post_meta($post_id, 'area', $area);
+    update_post_meta($post_id, 'total_cost', number_format($total_cost, 2));
+  }
 
     $from_email = get_option('driveway_from_email', get_option('admin_email'));
 $site_name = get_bloginfo('name');
