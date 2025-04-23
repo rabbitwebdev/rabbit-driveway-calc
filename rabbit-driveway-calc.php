@@ -2,7 +2,7 @@
    /*
    Plugin Name: Driveway Cost Calculator
    Description: A custom plugin to manage driveway pricing and calculations.
-   Version: 8.5.0
+   Version: 9.5.0
    Author: Your Name
    */
 
@@ -37,6 +37,8 @@ add_action('admin_enqueue_scripts', 'dc_admin_enqueue_styles');
 
    // Render the settings page
    function driveway_calculator_settings_page() {
+
+    
     echo '<div class="dcs-wrap">';
        // Code for rendering form fields for material/labor cost inputs
        echo '<h1>Driveway Cost Settings</h1>';
@@ -56,6 +58,22 @@ add_action('admin_enqueue_scripts', 'dc_admin_enqueue_styles');
        }
 
        echo '<form method="POST">';
+
+       $default_template = "Hi {name},\n\nThank you for using our driveway cost calculator.\n\n".
+                    "Surface: {surface}\nDesign: {design}\nArea: {area} m²\n".
+                    "Estimated Cost: £{cost}\n\nBest regards,\nYour Company";
+
+$current_template = get_option('driveway_email_template', $default_template);
+
+if (isset($_POST['submit'])) {
+  update_option('driveway_email_template', wp_kses_post($_POST['email_template']));
+  $current_template = $_POST['email_template'];
+}
+
+echo '<h2>Email Template</h2>';
+echo '<p>You can use the following placeholders: <code>{name}</code>, <code>{surface}</code>, <code>{design}</code>, <code>{area}</code>, <code>{cost}</code></p>';
+echo '<textarea name="email_template" rows="10" cols="80" style="width:100%;">' . esc_textarea($current_template) . '</textarea>';
+
        
        echo '<div class="dcs-form-group">';
        echo '<h2>Asphalt Pricing</h2>';
@@ -127,18 +145,33 @@ add_action('admin_enqueue_scripts', 'dc_admin_enqueue_styles');
         $total_cost += ($design_cost * $area);
     }
 
+    $email_template = get_option('driveway_email_template');
+
+$replacements = [
+  '{name}' => $name ?: 'Customer',
+  '{surface}' => ucfirst($surface_type),
+  '{design}' => $design ?: 'N/A',
+  '{area}' => $area,
+  '{cost}' => number_format($total_cost, 2),
+];
+
+$email_message = str_replace(array_keys($replacements), array_values($replacements), $email_template);
+
+
     // Optional: Email the quote
   if ($email && is_email($email)) {
-    $subject = "Your Driveway Cost Estimate";
-    $greeting = $name ? "Hi $name," : "Hi,";
-    $message = "$greeting\n\nThank you for using our driveway calculator.\n\n".
-               "Surface: $surface_type\n".
-               ($design ? "Design: $design\n" : "").
-               "Area: $area m²\n".
-               "Estimated Cost: £" . number_format($total_cost, 2) . "\n\n".
-               "Best regards,\nAndrew York Landscaping";
+    // $subject = "Your Driveway Cost Estimate";
+    // $greeting = $name ? "Hi $name," : "Hi,";
+    // $message = "$greeting\n\nThank you for using our driveway calculator.\n\n".
+    //            "Surface: $surface_type\n".
+    //            ($design ? "Design: $design\n" : "").
+    //            "Area: $area m²\n".
+    //            "Estimated Cost: £" . number_format($total_cost, 2) . "\n\n".
+    //            "Best regards,\nAndrew York Landscaping";
 
-    wp_mail($email, $subject, $message);
+    // wp_mail($email, $subject, $message);
+    wp_mail($email, "Your Driveway Estimate", $email_message);
+
   }
 
     return new WP_REST_Response(array('total_cost' => $total_cost), 200);
