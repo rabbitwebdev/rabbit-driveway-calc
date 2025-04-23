@@ -293,7 +293,6 @@ wp_mail($email, "Your Driveway Estimate from $site_name", $email_message, $heade
   
 </form>
 <div id="confirmation" style="display:none; text-align: center;">
-
   <h3>Thanks! Here's your Estimate:</h3>
   <div id="costOutput"></div>
 </div>
