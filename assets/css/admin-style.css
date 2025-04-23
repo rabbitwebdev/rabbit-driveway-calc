@@ -1,5 +1,11 @@
 .dcs-wrap {
     padding:25px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.dcs-form-group {
+    width: 45%;
 }
 
 .dcs-wrap form h2 {
