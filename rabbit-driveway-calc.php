@@ -29,6 +29,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
 
    // Render the settings page
    function driveway_calculator_settings_page() {
+    echo '<div class="dcs-wrap">';
        // Code for rendering form fields for material/labor cost inputs
        echo '<h1>Driveway Cost Settings</h1>';
        // Add input fields for prices here
@@ -80,6 +81,7 @@ add_action('wp_enqueue_scripts', 'wpdc_enqueue_assets');
 
        echo '<br/><input type="submit" name="submit" value="Save Prices">';
        echo '</form>';
+        echo '</div>';
    }
 
    // Register API endpoint for dynamic pricing
