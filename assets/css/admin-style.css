@@ -1,11 +1,24 @@
 .dcs-wrap {
-    padding:25px;
-    display: flex;
+    padding:15px;
+
+}
+
+.dcs-wrap form {
+display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .dcs-form-group {
-    width: 45%;
+width: 44%;
+    padding:10px;
+    background-color: #fff;
+    margin:10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 1px 1px 1px #0000004f;
+    border: 1px solid black;
+    border-radius:5px;
 }
 
 .dcs-wrap form h2 {
@@ -26,3 +39,14 @@
     font-weight: 500;
     color: black;
 }
+
+.dcs-wrap .button {
+        width: 100%;
+        padding:10px;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: blue;
+        color: #fff;
+        text-transform: uppercase;
+        box-shadow: 1px 1px 1px #0000ff75;
+    }}
