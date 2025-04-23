@@ -84,7 +84,7 @@ if (isset($_POST['submit'])) {
 echo '<h2>Email Sender Settings</h2>';
 echo '<label for="from_email">From Email Address</label><br>';
 echo '<input type="email" name="from_email" id="from_email" value="' . esc_attr($from_email) . '" style="width:100%;">';
-echo '<p>Note: This email address will be used as the sender for the estimate emails.</p>';
+echo '<p style="margin-bottom:10px; width:100%;">Note: This email address will be used as the sender for the estimate emails.</p>';
        echo '<div class="dcs-form-group">';
        echo '<h2>Asphalt Pricing</h2>';
        echo '<label>Material Cost per sqm</label>';
