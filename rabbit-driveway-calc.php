@@ -71,8 +71,20 @@ if (isset($_POST['submit'])) {
 }
 
 echo '<h2>Email Template</h2>';
-echo '<p>You can use the following placeholders: <code>{name}</code>, <code>{surface}</code>, <code>{design}</code>, <code>{area}</code>, <code>{cost}</code>, <code>{site_name}</code>, <code>{admin_email}</code> </p>';
+echo '<p>You can use the following placeholders: <code>{name}</code>, <code>{surface}</code>, <code>{design}</code>, <code>{area}</code>, <code>{cost}</code>, <code>{site_name}</code>, <code>{admin_email}</code>, <code>{site_url}</code> </p>';
 echo '<textarea name="email_template" rows="10" cols="80" style="width:100%;">' . esc_textarea($current_template) . '</textarea>';
+
+$from_email = get_option('driveway_from_email', get_option('admin_email'));
+
+if (isset($_POST['submit'])) {
+  update_option('driveway_from_email', sanitize_email($_POST['from_email']));
+  $from_email = $_POST['from_email'];
+}
+
+echo '<h2>Email Sender Settings</h2>';
+echo '<label for="from_email">From Email Address</label><br>';
+echo '<input type="email" name="from_email" id="from_email" value="' . esc_attr($from_email) . '" style="width:300px;">';
+
 
        
        echo '<div class="dcs-form-group">';
@@ -154,6 +166,7 @@ $replacements = [
   '{area}' => $area,
   '{cost}' => number_format($total_cost, 2),
    '{site_name}' => get_bloginfo('name'),
+    '{site_url}' => get_site_url(),
   '{admin_email}' => get_option('admin_email'),
 ];
 
@@ -172,7 +185,18 @@ $email_message = str_replace(array_keys($replacements), array_values($replacemen
     //            "Best regards,\nAndrew York Landscaping";
 
     // wp_mail($email, $subject, $message);
-    wp_mail($email, "Your Driveway Estimate", $email_message);
+    // wp_mail($email, "Your Driveway Estimate", $email_message);
+
+    $from_email = get_option('driveway_from_email', get_option('admin_email'));
+$site_name = get_bloginfo('name');
+
+$headers = [
+  "From: $site_name <$from_email>",
+  "Reply-To: $from_email",
+  "Content-Type: text/plain; charset=UTF-8"
+];
+
+wp_mail($email, "Your Driveway Estimate from $site_name", $email_message, $headers);
 
   }
 
