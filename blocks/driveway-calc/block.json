@@ -1,0 +1,58 @@
+{
+    "name": "acf/driveway-calc",
+    "title": "Rabbit Text",
+    "description": "A custom driveway-calc block that uses ACF fields.",
+    "style": [ "file:./driveway-calc.css" ],
+    "category": "formatting",
+    "icon": "editor-paragraph",
+    "keywords": ["driveway-calc", "quote"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "driveway-calc.php"
+    },
+     "attributes": {
+        "style": {
+            "type": "object",
+            "default": {
+                "spacing": {
+                    "margin": {
+                        "bottom": "0rem",
+                        "top": "0rem"
+                    },
+                    "padding": "1rem"
+                },
+                "background": {
+                    "backgroundImage": {
+                        "url": "IMAGE_URL"
+                    },
+                    "backgroundPosition": "50% 50%",
+                    "backgroundSize": "cover"
+                }
+            }
+        },
+        "backgroundColor": {
+            "type": "string",
+            "default": "var:preset|color|accent-5"
+        },
+        "textColor": {
+            "type": "string",
+            "default": "var:preset|color|contrast"
+        }
+    },
+    "supports": {
+        "anchor": true,
+        "align": true,
+        "html": true,
+        "jsx": true,
+        "mode": true,
+        "spacing": {
+            "margin": true,
+            "padding": true,
+            "blockGap": "var:preset|spacing|50"
+        },
+        "color": {
+            "background": true,
+            "text": true
+        }
+    }
+}

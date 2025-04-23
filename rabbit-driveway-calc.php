@@ -83,7 +83,7 @@ if (isset($_POST['submit'])) {
 
 echo '<h2>Email Sender Settings</h2>';
 echo '<label for="from_email">From Email Address</label><br>';
-echo '<input type="email" name="from_email" id="from_email" value="' . esc_attr($from_email) . '" style="width:300px;">';
+echo '<input type="email" name="from_email" id="from_email" value="' . esc_attr($from_email) . '" style="width:100%;">';
 
 
        
@@ -458,3 +458,15 @@ const name = document.getElementById("nameInput").value.trim();
     return ob_get_clean();
 }
 add_shortcode('driveway_calculator', 'driveway_calculator_form');
+
+function dcwp_register_acf_blocks() {
+    /**
+     * We register our block's with WordPress's handy
+     * register_block_type();
+     *
+     * @link https://developer.wordpress.org/reference/functions/register_block_type/
+     */
+    register_block_type( plugin_dir_path(__FILE__) . 'blocks/driveway-calc' );
+}
+// Here we call our tt3child_register_acf_block() function on init.
+add_action( 'init', 'dcwp_register_acf_blocks' );
