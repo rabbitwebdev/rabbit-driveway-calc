@@ -85,6 +85,13 @@ echo '<h2>Email Sender Settings</h2>';
 echo '<label for="from_email">From Email Address</label><br>';
 echo '<input type="email" name="from_email" id="from_email" value="' . esc_attr($from_email) . '" style="width:100%;">';
 
+echo '<button type="button" class="button button-secondary" onclick="previewDrivewayEmail()">Preview Email</button>';
+
+echo '<div id="email-preview-box" style="margin-top:20px; display:none; background:#f9f9f9; border:1px solid #ccc; padding:15px; border-radius:8px;">
+  <strong>Preview:</strong>
+  <pre id="email-preview-text" style="white-space:pre-wrap; margin-top:10px;"></pre>
+</div>';
+
 
        
        echo '<div class="dcs-form-group">';
@@ -125,6 +132,31 @@ echo '<input type="email" name="from_email" id="from_email" value="' . esc_attr(
        echo '</form>';
         echo '</div>';
    }
+
+   echo '<script>
+function previewDrivewayEmail() {
+  const template = document.querySelector("textarea[name=\'email_template\']").value;
+
+  const dummy = {
+    "{name}": "Alex",
+    "{surface}": "Block Paving",
+    "{design}": "Herringbone",
+    "{area}": "45",
+    "{cost}": "3,375.00",
+    "{site_name}": "My Driveway Co.",
+    "{site_url}": "https://example.com",
+    "{admin_email}": "admin@example.com"
+  };
+
+  let preview = template;
+  for (const [key, val] of Object.entries(dummy)) {
+    preview = preview.replaceAll(key, val);
+  }
+
+  document.getElementById("email-preview-text").innerText = preview;
+  document.getElementById("email-preview-box").style.display = "block";
+}
+</script>';
 
 
    // Register API endpoint for dynamic pricing
@@ -261,6 +293,7 @@ wp_mail($email, "Your Driveway Estimate from $site_name", $email_message, $heade
   
 </form>
 <div id="confirmation" style="display:none; text-align: center;">
+
   <h3>Thanks! Here's your Estimate:</h3>
   <div id="costOutput"></div>
 </div>
