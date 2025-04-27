@@ -27,6 +27,9 @@ add_action('init', function () {
     'label' => 'Driveway Quotes',
     'public' => true,
     'show_ui' => true,
+      'show_in_rest' => true, // <--- Important for Zapier!!
+    'rest_base' => 'driveway-quotes', // URL like /wp-json/wp/v2/driveway-quotes
+    'rest_controller_class' => 'WP_REST_Posts_Controller',
     'supports' => ['title', 'editor', 'custom-fields'],
     'menu_icon' => 'dashicons-email-alt',
   ]);
