@@ -518,3 +518,21 @@ function render_quote_details_meta($post) {
   }
   echo '</table>';
 }
+
+
+add_action('rest_api_init', function () {
+  $fields = ['name', 'email', 'surface', 'design', 'area', 'total_cost'];
+
+  foreach ($fields as $field) {
+    register_rest_field('driveway_quote', $field, [
+      'get_callback' => function($object) use ($field) {
+        return get_post_meta($object['id'], $field, true);
+      },
+      'update_callback' => null,
+      'schema' => [
+        'description' => ucfirst(str_replace('_', ' ', $field)),
+        'type' => 'string',
+      ],
+    ]);
+  }
+});
