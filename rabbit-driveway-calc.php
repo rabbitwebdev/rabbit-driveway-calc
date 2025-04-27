@@ -25,7 +25,7 @@ add_action('admin_enqueue_scripts', 'dc_admin_enqueue_styles');
 add_action('init', function () {
   register_post_type('driveway_quote', [
     'label' => 'Driveway Quotes',
-    'public' => false,
+    'public' => true,
     'show_ui' => true,
     'supports' => ['title', 'editor', 'custom-fields'],
     'menu_icon' => 'dashicons-email-alt',
