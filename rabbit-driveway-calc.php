@@ -276,9 +276,9 @@ wp_mail($email, "Your Driveway Estimate from $site_name", $email_message, $heade
  <div class="step step-4" style="display: none;">
   <h3>Step 4: Contact Details</h3>
   <p class="form-p">Enter your contact details:</p>
+    <p class="form-p">We will not share your details with anyone else.</p>
   <input type="checkbox" id="emailConsent" required />
-  <label for="emailConsent">I consent to receive an email with my estimate.</label>
-  <p class="form-p">We will not share your details with anyone else.</p>
+  <label class="form-p" for="emailConsent">I consent to receive an email with my estimate.</label>
   <input type="text" id="nameInput" placeholder="Your Name" />
   <input type="email" id="emailInput" placeholder="you@example.com" />
   <button type="button" class="prev">Previous</button>

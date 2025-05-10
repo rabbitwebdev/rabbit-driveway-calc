@@ -26,6 +26,13 @@ form#drivewayCalculatorForm .form-p {
     font-size: 14px;
 }
 
+form#drivewayCalculatorForm #emailConsent {
+    text-align: left;
+    width: 15px !important;
+    margin: 0;
+    margin-bottom: 0px;
+}
+
 form#drivewayCalculatorForm select,
 form#drivewayCalculatorForm input {
     width: 95%;
