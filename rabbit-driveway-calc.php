@@ -243,6 +243,7 @@ wp_mail($email, "Your Driveway Estimate from $site_name", $email_message, $heade
     <form id="drivewayCalculatorForm">
   <div class="step step-1">
     <h3>Step 1: Select Surface</h3>
+    <p>Choose the type of surface for your driveway:</p>
     <select id="surfaceType" required>
       <option value="">--Choose Surface--</option>
       <option value="asphalt">Asphalt</option>
@@ -255,6 +256,7 @@ wp_mail($email, "Your Driveway Estimate from $site_name", $email_message, $heade
 
   <div class="step step-2" style="display: none;">
     <h3>Step 2: Enter Driveway Area (sqm)</h3>
+    <p>Enter the area of your driveway in square meters:</p>
     <input type="number" id="areaInput" required min="1" placeholder="e.g. 50" />
     <button type="button" class="prev">Previous</button>
     <button type="button" class="next">Next</button>
@@ -273,6 +275,10 @@ wp_mail($email, "Your Driveway Estimate from $site_name", $email_message, $heade
 
  <div class="step step-4" style="display: none;">
   <h3>Step 4: Contact Details</h3>
+  <p>Enter your contact details:</p>
+  <input type="checkbox" id="emailConsent" required />
+  <label for="emailConsent">I consent to receive an email with my estimate.</label>
+  <p>We will not share your details with anyone else.</p>
   <input type="text" id="nameInput" placeholder="Your Name" />
   <input type="email" id="emailInput" placeholder="you@example.com" />
   <button type="button" class="prev">Previous</button>
