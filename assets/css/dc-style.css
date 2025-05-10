@@ -22,6 +22,10 @@ form#drivewayCalculatorForm h3 {
     margin-bottom: 10px;
 }
 
+form#drivewayCalculatorForm .form-p {
+    font-size: 14px;
+}
+
 form#drivewayCalculatorForm select,
 form#drivewayCalculatorForm input {
     width: 95%;
